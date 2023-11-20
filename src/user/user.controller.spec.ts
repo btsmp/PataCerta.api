@@ -3,7 +3,7 @@ import { UserController } from './user.controller';
 import { UserService } from './user.service';
 
 describe('UserController', () => {
-  let controller: UserController;
+  let sut: UserController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,10 +11,10 @@ describe('UserController', () => {
       providers: [UserService],
     }).compile();
 
-    controller = module.get<UserController>(UserController);
+    sut = module.get<UserController>(UserController);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(sut).toBeDefined();
   });
 });
