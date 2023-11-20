@@ -1,73 +1,32 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Pet Adoption Platform
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Bem-vindo ao Pet Adoption Platform! Esta plataforma foi criada para facilitar a adoção de animais de estimação, conectando pessoas interessadas em adotar com animais necessitados de um lar amoroso.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Funcionalidades Principais
 
-## Description
+- **Publicação de Pets para Adoção:** Os usuários podem criar perfis para animais de estimação que estão disponíveis para adoção, incluindo informações sobre o animal e fotos adoráveis.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Solicitações de Adoção:** Os interessados podem entrar em contato com os donos dos pets para iniciar o processo de adoção.
 
-## Installation
+- **Chat em Tempo Real:** Facilita a comunicação entre a parte interessada na adoção e o dono do pet por meio de um sistema de chat em tempo real.
 
-```bash
-$ npm install
-```
+## Como Contribuir
 
-## Running the app
+Se você deseja contribuir para o desenvolvimento desta plataforma, siga estas etapas:
 
-```bash
-# development
-$ npm run start
+1. Faça um fork do repositório.
+2. Crie uma branch para suas alterações: `git checkout -b minha-feature`.
+3. Faça commit das suas alterações seguindo a convenção de commits convencionais ([Conventional Commits](https://www.conventionalcommits.org/)).
+   - Exemplo de commit: `git commit -m 'feat: adiciona nova funcionalidade'`.
+4. Faça push para a branch: `git push origin minha-feature`.
+5. Abra um pull request.
 
-# watch mode
-$ npm run start:dev
+## Configuração do Ambiente de Desenvolvimento
 
-# production mode
-$ npm run start:prod
-```
+1. Clone o repositório: `git clone https://github.com/btsmp/pet-adoption-platform.git`.
+2. Instale as dependências: `npm install`.
+3. Execute o servidor local: `npm start`.
 
-## Test
+## Contato
 
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+- Em breve
