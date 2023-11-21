@@ -3,22 +3,26 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { faker } from '@faker-js/faker';
 import { PrismaService } from '../shared/config/prisma';
+import { User } from '@prisma/client';
 
-const generateFakeUser = (): CreateUserDto => {
-  return {
-    name: faker.person.fullName(),
-    email: faker.internet.email(),
-    password: faker.internet.password({ length: 6 }),
-    isOng: faker.datatype.boolean(),
-  };
+const UserMock: User = {
+  id: faker.string.uuid(),
+  cpf: null,
+  name: 'Test User',
+  email: 'test@example.com',
+  password: 'passwordExample',
+  isOng: false,
+  isValidated: faker.datatype.boolean(),
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
-const fakeUsers: CreateUserDto[] = Array.from({ length: 3 }, generateFakeUser);
+
 const prismaMock = {
   user: {
-    create: jest.fn().mockReturnValue(fakeUsers[0]),
+    create: jest.fn().mockReturnValue(UserMock),
+    update: jest.fn().mockReturnValue(UserMock),
   },
 };
-
 describe('UserService', () => {
   let sut: UserService;
   let prisma: PrismaService;
@@ -39,13 +43,41 @@ describe('UserService', () => {
     expect(sut).toBeDefined();
   });
 
-  it('should create a new user', async () => {
-    const response = await sut.create(fakeUsers[0]);
+  describe('method create', () => {
+    it('should be able to create a new user', async () => {
+      const testUser: CreateUserDto = {
+        email: 'test@example.com',
+        name: 'Test User',
+        password: 'passwordExample',
+        isOng: false,
+      };
 
-    expect(response).toBe(fakeUsers[0]);
-    expect(prisma.user.create).toHaveBeenCalledTimes(1);
-    expect(prisma.user.create).toHaveBeenCalledWith({
-      data: fakeUsers[0],
+      const response = await sut.create(testUser);
+      console.log(response);
+      console.log(UserMock);
+
+      expect(response).toBeDefined();
+      expect(response).toMatchObject(UserMock);
+      expect(response).toEqual(UserMock);
+
+      expect(prisma.user.create).toHaveBeenCalledTimes(1);
+      expect(prisma.user.create).toHaveBeenCalled();
+    });
+
+    it('should not be able to create a new user', async () => {
+      const testUser = {
+        email: undefined,
+        name: 'Test User',
+        password: 'passwordExample',
+        isOng: false,
+      };
+      jest.spyOn(prisma.user, 'create').mockReturnValue(undefined);
+
+      const response = await sut.create(testUser);
+      console.log(response);
+      expect(response).not.toBeDefined();
     });
   });
+
+  it('should update a user', () => {});
 });

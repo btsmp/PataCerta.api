@@ -6,8 +6,18 @@ import { PrismaService } from '../shared/config/prisma';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
-  create(createUserDto: CreateUserDto) {
-    return this.prisma.user.create({ data: createUserDto });
+  create({ email, name, password, isOng }: CreateUserDto) {
+    if ((email || name || password || isOng) === undefined) {
+      return undefined;
+    }
+    return this.prisma.user.create({
+      data: {
+        email,
+        name,
+        password,
+        isOng,
+      },
+    });
   }
 
   findAll() {
