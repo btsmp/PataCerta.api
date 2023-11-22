@@ -1,31 +1,17 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { faker } from '@faker-js/faker';
 import { PrismaService } from '../shared/config/prisma';
-import { User } from '@prisma/client';
-
-const UserMock: User = {
-  id: faker.string.uuid(),
-  cpf: null,
-  name: 'Test User',
-  email: 'test@example.com',
-  password: 'passwordExample',
-  isOng: false,
-  isValidated: faker.datatype.boolean(),
-  createdAt: new Date(),
-  updatedAt: new Date(),
-};
+import { BadRequestException } from '@nestjs/common';
 
 const prismaMock = {
   user: {
-    create: jest.fn().mockReturnValue(UserMock),
-    update: jest.fn().mockReturnValue(UserMock),
+    create: jest.fn(),
+    update: jest.fn(),
   },
 };
 describe('UserService', () => {
   let sut: UserService;
-  let prisma: PrismaService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,7 +22,10 @@ describe('UserService', () => {
     }).compile();
 
     sut = module.get<UserService>(UserService);
-    prisma = module.get<PrismaService>(PrismaService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
@@ -52,32 +41,36 @@ describe('UserService', () => {
         isOng: false,
       };
 
+      prismaMock.user.create.mockReturnValue(testUser);
+
       const response = await sut.create(testUser);
-      console.log(response);
-      console.log(UserMock);
 
       expect(response).toBeDefined();
-      expect(response).toMatchObject(UserMock);
-      expect(response).toEqual(UserMock);
+      expect(response).toEqual(testUser);
 
-      expect(prisma.user.create).toHaveBeenCalledTimes(1);
-      expect(prisma.user.create).toHaveBeenCalled();
+      expect(prismaMock.user.create).toHaveBeenCalled();
+      expect(prismaMock.user.create).toHaveBeenCalledWith({
+        data: testUser,
+      });
     });
 
-    it('should not be able to create a new user', async () => {
-      const testUser = {
-        email: undefined,
-        name: 'Test User',
+    it('should not be able to create a new user if any required field is missing', async () => {
+      const testUser: CreateUserDto = {
+        email: 'test@example.com',
+        name: undefined,
         password: 'passwordExample',
         isOng: false,
       };
-      jest.spyOn(prisma.user, 'create').mockReturnValue(undefined);
 
-      const response = await sut.create(testUser);
-      console.log(response);
-      expect(response).not.toBeDefined();
+      try {
+        await sut.create(testUser);
+        fail('Expected exception was not thrown');
+      } catch (error) {
+        expect(error).toBeInstanceOf(BadRequestException);
+        expect(error.message).toBe('Invalid input data');
+      }
+
+      expect(prismaMock.user.create).not.toHaveBeenCalled();
     });
   });
-
-  it('should update a user', () => {});
 });

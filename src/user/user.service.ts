@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../shared/config/prisma';
@@ -7,9 +7,15 @@ import { PrismaService } from '../shared/config/prisma';
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
   create({ email, name, password, isOng }: CreateUserDto) {
-    if ((email || name || password || isOng) === undefined) {
-      return undefined;
+    if (
+      email === undefined ||
+      name === undefined ||
+      password === undefined ||
+      isOng === undefined
+    ) {
+      throw new BadRequestException('Invalid input data');
     }
+
     return this.prisma.user.create({
       data: {
         email,
