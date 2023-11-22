@@ -11,15 +11,12 @@ export class CreateUserDto {
   email: string;
 
   @IsNotEmpty({ message: 'Name cannot be empty.' })
+  @IsString({ message: 'Name must to be a string.' })
   name: string;
 
   @MinLength(6, { message: 'Password must be at least 6 characters long.' })
   password: string;
 
   @IsBoolean({ message: 'The isOng field must be a boolean value.' })
-  isOng: boolean;
-
-  @IsString({ message: 'CPF must be a string.' })
-  @IsNotEmpty({ message: 'CPF cannot be empty.' })
-  cpf: string;
+  isOng?: boolean;
 }

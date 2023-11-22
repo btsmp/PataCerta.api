@@ -1,11 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { PrismaService } from '../shared/config/prisma';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return createUserDto;
+  constructor(private readonly prisma: PrismaService) {}
+  create({ email, name, password, isOng }: CreateUserDto) {
+    if ((email || name || password || isOng) === undefined) {
+      return undefined;
+    }
+    return this.prisma.user.create({
+      data: {
+        email,
+        name,
+        password,
+        isOng,
+      },
+    });
   }
 
   findAll() {
