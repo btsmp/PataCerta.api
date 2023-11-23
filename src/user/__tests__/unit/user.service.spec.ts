@@ -10,6 +10,7 @@ import {
   fakeDBUsers,
   generateFakeUser,
 } from '../utils';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 const prismaMock = {
   user: {
@@ -59,7 +60,12 @@ describe('UserService', () => {
     });
 
     it('should not be able to create a new user if any required field is missing', async () => {
-      const testUser = generateFakeDataToCreateUser();
+      const testUser: CreateUserDto = {
+        email: undefined,
+        name: 'John Doe',
+        password: 'password',
+        isOng: false,
+      };
 
       try {
         await sut.create(testUser);
