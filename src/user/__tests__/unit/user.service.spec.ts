@@ -1,27 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { PrismaService } from '../shared/config/prisma';
+import { UserService } from '../../user.service';
+import { PrismaService } from '../../../shared/config/prisma';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { User } from '@prisma/client';
-import { UpdateUserDto } from './dto/update-user.dto';
-
-const generateFakeUser = (): User => {
-  return {
-    id: faker.string.uuid(),
-    email: faker.internet.email(),
-    cpf: faker.number.int({ min: 11111111111, max: 99999999999 }).toString(),
-    name: faker.person.fullName(),
-    password: faker.internet.password({ length: 6 }),
-    isOng: faker.datatype.boolean(),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    isValidated: faker.datatype.boolean(),
-  };
-};
-
-const fakeUsers: User[] = Array.from({ length: 3 }, generateFakeUser);
+import { UpdateUserDto } from '../../dto/update-user.dto';
+import {
+  generateFakeDataToCreateUser,
+  fakeDBUsers,
+  generateFakeUser,
+} from '../utils';
 
 const prismaMock = {
   user: {
@@ -57,19 +45,12 @@ describe('UserService', () => {
 
   describe('create', () => {
     it('should be able to create a new user', async () => {
-      const testUser: CreateUserDto = {
-        email: 'test@example.com',
-        name: 'Test User',
-        password: 'passwordExample',
-        isOng: false,
-      };
-
-      prismaMock.user.create.mockReturnValue(testUser);
-
+      const testUser = generateFakeDataToCreateUser();
+      prismaMock.user.create.mockReturnValue(fakeDBUsers[0]);
       const response = await sut.create(testUser);
 
       expect(response).toBeDefined();
-      expect(response).toEqual(testUser);
+      expect(response).toMatchObject(fakeDBUsers[0]);
 
       expect(prismaMock.user.create).toHaveBeenCalled();
       expect(prismaMock.user.create).toHaveBeenCalledWith({
@@ -78,12 +59,7 @@ describe('UserService', () => {
     });
 
     it('should not be able to create a new user if any required field is missing', async () => {
-      const testUser: CreateUserDto = {
-        email: 'test@example.com',
-        name: undefined,
-        password: 'passwordExample',
-        isOng: false,
-      };
+      const testUser = generateFakeDataToCreateUser();
 
       try {
         await sut.create(testUser);
@@ -97,19 +73,19 @@ describe('UserService', () => {
 
   describe('list', () => {
     it('should be able to list all users', async () => {
-      prismaMock.user.findMany.mockReturnValue(fakeUsers);
+      prismaMock.user.findMany.mockReturnValue(fakeDBUsers);
       const response = await sut.findAll();
       expect(response).toBeDefined();
-      expect(response).toEqual(fakeUsers);
+      expect(response).toEqual(fakeDBUsers);
       expect(prismaMock.user.findMany).toHaveBeenCalled();
     });
 
     it('should be able to find one specific user by id', async () => {
-      prismaMock.user.findFirst.mockReturnValue(fakeUsers[2]);
-      const id = fakeUsers[2].id;
+      prismaMock.user.findFirst.mockReturnValue(fakeDBUsers[2]);
+      const id = fakeDBUsers[2].id;
       const response = await sut.findOne(id);
       expect(response).toBeDefined();
-      expect(response).toMatchObject(fakeUsers[2]);
+      expect(response).toMatchObject(fakeDBUsers[2]);
       expect(prismaMock.user.findFirst).toHaveBeenCalled();
     });
 
@@ -165,7 +141,27 @@ describe('UserService', () => {
   });
 
   describe('delete', () => {
-    it('should be able to delete a user', async () => {});
-    it('should not be able to delete a user if a non existent user', async () => {});
+    it('should be able to delete a user', async () => {
+      const existingUser = generateFakeUser();
+      prismaMock.user.findFirst.mockResolvedValue(existingUser);
+
+      await sut.delete(existingUser.id);
+
+      expect(prismaMock.user.delete).toHaveBeenCalledWith({
+        where: { id: existingUser.id },
+      });
+    });
+    it('should throw an error if user to delete is not found', async () => {
+      const nonExistentUserId = faker.string.uuid();
+      prismaMock.user.findFirst.mockResolvedValue(null);
+
+      try {
+        await sut.delete(nonExistentUserId);
+      } catch (err) {
+        expect(err).toBeInstanceOf(NotFoundException);
+        expect(err.message).toBe(`User ${nonExistentUserId} does not exist`);
+      }
+      expect(prismaMock.user.delete).not.toHaveBeenCalled();
+    });
   });
 });
