@@ -10,23 +10,11 @@ import { PrismaService } from '../shared/config/prisma';
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
-  create({ email, name, password, isOng }: CreateUserDto) {
-    if (
-      email === undefined ||
-      name === undefined ||
-      password === undefined ||
-      isOng === undefined
-    ) {
-      throw new BadRequestException('Invalid input data');
-    }
+  create(data: CreateUserDto) {
+    this.checkIfHasFielUndefined(data);
 
     return this.prisma.user.create({
-      data: {
-        email,
-        name,
-        password,
-        isOng,
-      },
+      data,
     });
   }
 
@@ -35,21 +23,12 @@ export class UserService {
   }
 
   async findOne(id: string) {
-    const data = await this.prisma.user.findFirst({ where: { id } });
-
-    if (!data) {
-      throw new NotFoundException(`User ${id} does not exist`);
-    } else {
-      return data;
-    }
+    const data = await this.throwIfUserNotFound(id);
+    return data;
   }
 
   async update(id: string, updatedUserData: UpdateUserDto) {
-    const userExists = await this.prisma.user.findFirst({ where: { id } });
-
-    if (!userExists) {
-      throw new NotFoundException(`User ${id} does not exist`);
-    }
+    await this.throwIfUserNotFound(id);
 
     const updatedUser = await this.prisma.user.update({
       where: { id },
@@ -59,7 +38,29 @@ export class UserService {
     return updatedUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async delete(id: string) {
+    await this.throwIfUserNotFound(id);
+
+    return this.prisma.user.delete({ where: { id } });
+  }
+
+  private async throwIfUserNotFound(id: string) {
+    const userExists = await this.prisma.user.findFirst({ where: { id } });
+
+    if (!userExists) {
+      throw new NotFoundException(`User ${id} does not exist`);
+    } else {
+      return userExists;
+    }
+  }
+
+  private checkIfHasFielUndefined(data: CreateUserDto) {
+    const hasUndefinedValue = Object.values(data).some(
+      (value) => value === undefined,
+    );
+
+    if (hasUndefinedValue) {
+      throw new BadRequestException('Invalid input data');
+    }
   }
 }
