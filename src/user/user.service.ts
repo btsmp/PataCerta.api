@@ -6,28 +6,28 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../shared/config/prisma';
+import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {
   constructor(private readonly prisma: PrismaService) {}
-  create(data: CreateUserDto) {
-    this.checkIfHasFielUndefined(data);
+  public async create(data: CreateUserDto) {
+    this.checkIfHasFieldUndefined(data);
+    data.password = await hash(data.password, 5);
 
-    return this.prisma.user.create({
-      data,
-    });
+    return this.prisma.user.create({ data });
   }
 
-  findAll() {
+  public findAll() {
     return this.prisma.user.findMany({});
   }
 
-  async findOne(id: string) {
+  public async findOne(id: string) {
     const data = await this.throwIfUserNotFound(id);
     return data;
   }
 
-  async update(id: string, updatedUserData: UpdateUserDto) {
+  public async update(id: string, updatedUserData: UpdateUserDto) {
     await this.throwIfUserNotFound(id);
 
     const updatedUser = await this.prisma.user.update({
@@ -38,7 +38,7 @@ export class UserService {
     return updatedUser;
   }
 
-  async delete(id: string) {
+  public async delete(id: string) {
     await this.throwIfUserNotFound(id);
 
     return this.prisma.user.delete({ where: { id } });
@@ -54,7 +54,7 @@ export class UserService {
     }
   }
 
-  private checkIfHasFielUndefined(data: CreateUserDto) {
+  private checkIfHasFieldUndefined(data: CreateUserDto) {
     const hasUndefinedValue = Object.values(data).some(
       (value) => value === undefined,
     );
