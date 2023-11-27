@@ -1,6 +1,6 @@
+import { CreateUserDto } from '../dto/create-user.dto';
 import { faker } from '@faker-js/faker';
 import { User } from '@prisma/client';
-import { CreateUserDto } from '../dto/create-user.dto';
 
 export const generateFakeUser = (): User => {
   return {

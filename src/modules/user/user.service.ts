@@ -1,12 +1,12 @@
+import { PrismaService } from 'src/shared/config/prisma';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { hash } from 'bcryptjs';
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from '../shared/config/prisma';
-import { hash } from 'bcryptjs';
 
 @Injectable()
 export class UserService {

@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from '../../user.controller';
-import { UserService } from '../../user.service';
 import { fakeDBUsers, generateFakeDataToCreateUser } from '../utils';
-import { UpdateUserDto } from 'src/user/dto/update-user.dto';
+import { UpdateUserDto } from '../../dto/update-user.dto';
+import { UserController } from '../../user.controller';
+import { Test, TestingModule } from '@nestjs/testing';
+import { UserService } from '../../user.service';
 
 describe('UserController', () => {
   let sut: UserController;

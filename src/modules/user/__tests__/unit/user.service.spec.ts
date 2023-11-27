@@ -1,16 +1,16 @@
+import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { UpdateUserDto } from '../../dto/update-user.dto';
+import { CreateUserDto } from '../../dto/create-user.dto';
+import { PrismaService } from 'src/shared/config/prisma';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../../user.service';
-import { PrismaService } from '../../../shared/config/prisma';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { faker } from '@faker-js/faker';
 import { User } from '@prisma/client';
-import { UpdateUserDto } from '../../dto/update-user.dto';
 import {
   generateFakeDataToCreateUser,
   fakeDBUsers,
   generateFakeUser,
 } from '../utils';
-import { CreateUserDto } from 'src/user/dto/create-user.dto';
 
 const prismaMock = {
   user: {
