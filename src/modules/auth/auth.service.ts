@@ -16,7 +16,6 @@ export class AuthService {
     const user = await this.prisma.user.findFirst({
       where: { email },
     });
-
     if (!user || !bcrypt.compare(password, user.password)) {
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -32,6 +31,7 @@ export class AuthService {
       isValidate: user.isValidated,
       isOng: user.isOng,
     };
+
     return {
       access_token: await this.jwt.signAsync(payload),
       user: payload,
