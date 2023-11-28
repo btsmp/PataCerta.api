@@ -43,11 +43,12 @@ export class PetsService {
     return pet;
   }
 
-  update(id: number, updatePetDto: UpdatePetDto) {
+  update(id: string, updatePetDto: UpdatePetDto) {
+    console.log(updatePetDto);
     return `This action updates a #${id} pet`;
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} pet`;
   }
 }
