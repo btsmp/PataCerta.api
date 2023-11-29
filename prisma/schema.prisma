@@ -26,6 +26,7 @@ model User {
 
 model Pet {
   id              String            @id @unique @default(uuid())
+  profilePicUrl   String
   name            String
   species         String
   description     String
