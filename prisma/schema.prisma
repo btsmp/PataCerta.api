@@ -11,30 +11,39 @@ datasource db {
 }
 
 model User {
-  id          String   @unique @default(uuid())
-  name        String
-  password    String
-  email       String   @unique
-  cpf         String?  @unique
-  isValidated Boolean  @default(false) @db.Boolean()
-  createdAt   DateTime @default(now()) @db.Timestamp()
-  updatedAt   DateTime @updatedAt @db.Timestamp()
-  Pet         Pet[]
+  id              String            @id @unique @default(uuid())
+  name            String
+  password        String
+  email           String            @unique
+  cpf             String?           @unique
+  isValidated     Boolean           @default(false) @db.Boolean()
+  isOng           Boolean           @default(false) @db.Boolean()
+  createdAt       DateTime          @default(now()) @db.Timestamp()
+  updatedAt       DateTime          @updatedAt @db.Timestamp()
+  Pet             Pet[]
+  AdoptionRequest AdoptionRequest[]
 }
 
 model Pet {
-  id          String   @unique @default(uuid())
-  name        String
-  species     String
-  description String
-  createdAt   DateTime @default(now()) @db.Timestamp()
-  updatedAt   DateTime @updatedAt @db.Timestamp()
-  owner       User     @relation(fields: [onwerId], references: [id])
-  onwerId     String
-  status      String
+  id              String            @id @unique @default(uuid())
+  profilePicUrl   String?
+  name            String
+  species         String
+  description     String
+  createdAt       DateTime          @default(now()) @db.Timestamp()
+  updatedAt       DateTime          @updatedAt @db.Timestamp()
+  status          String
+  owner           User              @relation(fields: [onwerId], references: [id])
+  onwerId         String
+  AdoptionRequest AdoptionRequest[]
 }
 
 model AdoptionRequest {
-  id String @unique @default(uuid())
-  // make the next fields
+  id        String   @id @unique @default(uuid())
+  adopter   User     @relation(fields: [adopterId], references: [id])
+  adopterId String
+  pet       Pet      @relation(fields: [petId], references: [id])
+  petId     String
+  cretaedAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @updatedAt @db.Timestamp()
 }
