@@ -11,31 +11,35 @@ datasource db {
 }
 
 model User {
-  id              String            @id @unique @default(uuid())
-  name            String
-  password        String
-  email           String            @unique
-  cpf             String?           @unique
-  isValidated     Boolean           @default(false) @db.Boolean()
-  isOng           Boolean           @default(false) @db.Boolean()
-  createdAt       DateTime          @default(now()) @db.Timestamp()
-  updatedAt       DateTime          @updatedAt @db.Timestamp()
-  Pet             Pet[]
-  AdoptionRequest AdoptionRequest[]
+  id                String            @id @unique @default(uuid())
+  profilePictureUrl String?
+  name              String
+  password          String
+  email             String            @unique
+  cpf               String?           @unique
+  isValidated       Boolean           @default(false) @db.Boolean()
+  isOng             Boolean           @default(false) @db.Boolean()
+  createdAt         DateTime          @default(now()) @db.Timestamp()
+  updatedAt         DateTime          @updatedAt @db.Timestamp()
+  Pet               Pet[]
+  adoptionRequest   AdoptionRequest[]
+  chats             Chat[]            @relation("UserChats")
+  sentMessages      Message[]         @relation("SenderMessages")
+  receivedMessages  Message[]         @relation("ReceiverMessages")
 }
 
 model Pet {
-  id              String            @id @unique @default(uuid())
-  profilePicUrl   String?
-  name            String
-  species         String
-  description     String
-  createdAt       DateTime          @default(now()) @db.Timestamp()
-  updatedAt       DateTime          @updatedAt @db.Timestamp()
-  status          String
-  owner           User              @relation(fields: [onwerId], references: [id])
-  onwerId         String
-  AdoptionRequest AdoptionRequest[]
+  id                String            @id @unique @default(uuid())
+  profilePictureUrl String?
+  name              String
+  species           String
+  description       String
+  createdAt         DateTime          @default(now()) @db.Timestamp()
+  updatedAt         DateTime          @updatedAt @db.Timestamp()
+  status            String?           @default("pending")
+  owner             User              @relation(fields: [onwerId], references: [id])
+  onwerId           String
+  adoptionRequest   AdoptionRequest[]
 }
 
 model AdoptionRequest {
@@ -46,4 +50,22 @@ model AdoptionRequest {
   petId     String
   cretaedAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @updatedAt @db.Timestamp()
+}
+
+model Chat {
+  id       String    @id @unique @default(uuid())
+  users    User[]    @relation("UserChats")
+  messages Message[]
+}
+
+model Message {
+  id         Int      @id @unique @default(autoincrement())
+  content    String
+  createdAt  DateTime @default(now())
+  sender     User     @relation("SenderMessages", fields: [senderId], references: [id])
+  receiver   User     @relation("ReceiverMessages", fields: [receiverId], references: [id])
+  senderId   String
+  receiverId String
+  chat       Chat     @relation(fields: [chatId], references: [id])
+  chatId     String
 }
