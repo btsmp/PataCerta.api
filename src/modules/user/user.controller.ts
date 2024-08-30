@@ -1,5 +1,8 @@
+import { AuthenticatedUser } from '../../interfaces/authenticated-user.interface';
+import { User } from '../../decorators/user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { AuthGuard } from '../../guards/auth.guard';
 import { UserService } from './user.service';
 import {
   Controller,
@@ -9,6 +12,7 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 
 @Controller('user')
@@ -38,10 +42,13 @@ export class UserController {
   findOne(@Param('id') id: string) {
     return this.userService.findOne(id);
   }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  @UseGuards(AuthGuard)
+  @Patch()
+  update(
+    @User() user: AuthenticatedUser,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    return this.userService.update(user.id, updateUserDto);
   }
 
   @Delete(':id')
