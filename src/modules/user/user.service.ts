@@ -1,7 +1,7 @@
 import { PrismaService } from 'src/shared/config/prisma';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { hash } from 'bcryptjs';
+import * as bcryptjs from 'bcryptjs';
 import {
   BadRequestException,
   Injectable,
@@ -13,7 +13,7 @@ export class UserService {
   constructor(private readonly prisma: PrismaService) {}
   public async create(data: CreateUserDto) {
     this.checkIfHasFieldUndefined(data);
-    data.password = await hash(data.password, 5);
+    data.password = await bcryptjs.hash(data.password, 5);
 
     return this.prisma.user.create({ data });
   }
@@ -30,12 +30,17 @@ export class UserService {
   public async update(id: string, updatedUserData: UpdateUserDto) {
     await this.throwIfUserNotFound(id);
 
-    const updatedUser = await this.prisma.user.update({
-      where: { id },
-      data: updatedUserData,
-    });
-
-    return updatedUser;
+    if (updatedUserData.password) {
+    }
+    try {
+      const updatedUser = await this.prisma.user.update({
+        where: { id },
+        data: updatedUserData,
+      });
+      return updatedUser;
+    } catch (err) {
+      throw new BadRequestException('Ivalid data');
+    }
   }
 
   public async delete(id: string) {
