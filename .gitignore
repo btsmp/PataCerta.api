@@ -37,3 +37,8 @@ lerna-debug.log*
 
 # Environment
 .env
+
+
+
+# PG admin
+/pgdata

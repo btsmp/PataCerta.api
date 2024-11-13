@@ -6,17 +6,18 @@ services:
     restart: always
     environment:
       - POSTGRES_PASSWORD=postgres
-    container_name: postgres
+    container_name: PataCerta.db
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
-      - '5432:5432'
-
+      - '5433:5432'
+    networks:
+      - default
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: nest-docker-postgres
+    container_name: PataCerta.server
     environment:
       - PORT=${PORT}
     ports:
@@ -25,3 +26,16 @@ services:
       - db
     volumes:
       - ./src:/app/src
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: PataCerta.pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+    networks:
+      - default
