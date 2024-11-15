@@ -17,7 +17,7 @@ export class AuthService {
       where: { email },
     });
     if (!user || !bcrypt.compare(password, user.password)) {
-      throw new UnauthorizedException('Invalid credentials');
+      throw new UnauthorizedException('Email ou senha incorretas');
     }
 
     return this.generateToken(user);
@@ -28,12 +28,11 @@ export class AuthService {
       id: user.id,
       name: user.name,
       email: user.email,
-      isValidate: user.isValidated,
-      isOng: user.isOng,
     };
 
+    const token = await this.jwt.signAsync(payload);
     return {
-      access_token: await this.jwt.signAsync(payload),
+      access_token: token,
       user: payload,
     };
   }

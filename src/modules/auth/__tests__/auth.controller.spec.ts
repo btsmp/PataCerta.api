@@ -35,8 +35,6 @@ describe('AuthController', () => {
           id: '1',
           name: 'John Doe',
           email: 'john@example.com',
-          isValidate: true,
-          isOng: false,
         },
       };
 
@@ -45,7 +43,7 @@ describe('AuthController', () => {
 
       const responseMock: Partial<Response> = {
         cookie: jest.fn(),
-        send: jest.fn(),
+        json: jest.fn(),
       };
 
       await controller.create(signInDTO, responseMock as Response);
@@ -56,23 +54,23 @@ describe('AuthController', () => {
         tokenData.access_token,
         { httpOnly: true },
       );
-      expect(responseMock.send).toHaveBeenCalledWith(tokenData.user);
+      expect(responseMock.json).toHaveBeenCalledWith(tokenData.user);
     });
   });
 
   describe('remove', () => {
-    it('should clear cookies and return status 200', () => {
+    it('should clear cookies', () => {
       const responseMock: Partial<Response> = {
         clearCookie: jest.fn(),
-        status: jest.fn().mockReturnThis(), // To allow chaining with send()
-        send: jest.fn(),
+        json: jest.fn(),
       };
 
       controller.remove(responseMock as Response);
 
       expect(responseMock.clearCookie).toHaveBeenCalledWith('access_token');
-      expect(responseMock.status).toHaveBeenCalledWith(200);
-      expect(responseMock.send).toHaveBeenCalledWith({ message: 'Logged out' });
+      expect(responseMock.json).toHaveBeenCalledWith({
+        message: 'Logged out successfully',
+      });
     });
   });
 });

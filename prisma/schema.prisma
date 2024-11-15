@@ -10,35 +10,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum UserRole {
+  ADMIN
+  USER
+  ONG
+}
+
 model User {
-  id              String            @id @unique @default(uuid())
-  name            String
-  password        String
-  email           String            @unique
-  cpf             String?           @unique
-  isValidated     Boolean           @default(false) @db.Boolean()
-  isOng           Boolean           @default(false) @db.Boolean()
-  createdAt       DateTime          @default(now()) @db.Timestamp()
-  updatedAt       DateTime          @updatedAt @db.Timestamp()
-  Pet             Pet[]
-  AdoptionRequest AdoptionRequest[]
+  id            String  @id @unique @default(uuid())
+  name          String
+  password      String
+  email         String  @unique
+  age           String?
+  aboutMe       String?
+  profilePicUrl String?
+  city          String?
+  uf            String?
+  cpf           String? @unique
+
+  role UserRole @default(USER)
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @updatedAt @db.Timestamp()
+
+  pets      Pet[]
+  interests Interest[]
 }
 
 model Pet {
-  id              String            @id @unique @default(uuid())
-  profilePicUrl   String?
-  name            String
-  species         String
-  description     String
-  createdAt       DateTime          @default(now()) @db.Timestamp()
-  updatedAt       DateTime          @updatedAt @db.Timestamp()
-  status          String
-  owner           User              @relation(fields: [onwerId], references: [id])
-  onwerId         String
-  AdoptionRequest AdoptionRequest[]
+  id            String  @id @unique @default(uuid())
+  profilePicUrl String?
+  name          String
+  species       String
+  description   String
+  isAdopted     Boolean @default(false)
+
+  createdAt DateTime @default(now()) @db.Timestamp()
+  updatedAt DateTime @updatedAt @db.Timestamp()
+
+  owner     User?      @relation(fields: [onwerId], references: [id])
+  onwerId   String?
+  interests Interest[]
 }
 
-model AdoptionRequest {
+model Interest {
   id        String   @id @unique @default(uuid())
   adopter   User     @relation(fields: [adopterId], references: [id])
   adopterId String
