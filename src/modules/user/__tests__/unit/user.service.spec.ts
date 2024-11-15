@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { UpdateUserDto } from '../../dto/update-user.dto';
 import { CreateUserDto } from '../../dto/create-user.dto';
-import { PrismaService } from 'src/shared/config/prisma';
+import { PrismaService } from '../../../../shared/config/prisma';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../../user.service';
 import { faker } from '@faker-js/faker';

@@ -1,4 +1,3 @@
-import { PrismaService } from 'src/shared/config/prisma';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcryptjs from 'bcryptjs';
@@ -7,6 +6,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PrismaService } from '../../shared/config/prisma';
 
 @Injectable()
 export class UserService {

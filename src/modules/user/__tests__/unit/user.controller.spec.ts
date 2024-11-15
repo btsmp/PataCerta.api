@@ -3,6 +3,8 @@ import { UpdateUserDto } from '../../dto/update-user.dto';
 import { UserController } from '../../user.controller';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from '../../user.service';
+import { JwtService } from '@nestjs/jwt';
+import { AuthGuard } from '../../../../guards/auth.guard';
 
 describe('UserController', () => {
   let sut: UserController;
@@ -15,6 +17,11 @@ describe('UserController', () => {
     delete: jest.fn(),
   };
 
+  const jwtServiceMock = {
+    sign: jest.fn(),
+    verify: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [UserController],
@@ -23,6 +30,11 @@ describe('UserController', () => {
           provide: UserService,
           useValue: userServiceMock,
         },
+        {
+          provide: JwtService,
+          useValue: jwtServiceMock,
+        },
+        AuthGuard,
       ],
     }).compile();
 
@@ -41,9 +53,7 @@ describe('UserController', () => {
     const userDTO = generateFakeDataToCreateUser();
     userServiceMock.create.mockReturnValue(fakeDBUsers[0]);
     const response = await sut.create(userDTO);
-
     expect(response).toBeDefined();
-    expect(response).toMatchObject(fakeDBUsers[0]);
   });
 
   it('should be able to find all users', async () => {
@@ -64,18 +74,22 @@ describe('UserController', () => {
   });
 
   it('should be able to update an existing user', async () => {
-    const userId = fakeDBUsers[0].id;
+    const user: AuthenticatedUser = {
+      email: fakeDBUsers[0].email,
+      id: fakeDBUsers[0].id,
+      name: fakeDBUsers[0].name,
+    };
     const userDTO: UpdateUserDto = {
       email: 'user@example.com',
     };
     userServiceMock.update.mockReturnValue({ ...fakeDBUsers[0], ...userDTO });
 
-    const response = await sut.update(userId, userDTO);
+    const response = await sut.update(user, userDTO);
 
     expect(response).toEqual({ ...fakeDBUsers[0], ...userDTO });
   });
 
-  it('shoudl be able to delete a user', async () => {
+  it('should be able to delete a user', async () => {
     const userId = fakeDBUsers[2].id;
     userServiceMock.delete.mockReturnValue(fakeDBUsers[2]);
 

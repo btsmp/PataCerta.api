@@ -9,10 +9,14 @@ export const generateFakeUser = (): User => {
     cpf: faker.number.int({ min: 11111111111, max: 99999999999 }).toString(),
     name: faker.person.fullName(),
     password: faker.internet.password({ length: 6 }),
-    isOng: faker.datatype.boolean(),
     createdAt: new Date(),
     updatedAt: new Date(),
-    isValidated: faker.datatype.boolean(),
+    age: faker.number.int({ min: 12, max: 99 }),
+    aboutMe: faker.person.bio(),
+    profilePicUrl: faker.internet.domainWord(),
+    city: faker.location.city(),
+    uf: faker.string.alpha({ length: 2 }),
+    role: 'USER',
   };
 };
 
@@ -21,7 +25,6 @@ export const generateFakeDataToCreateUser = (): CreateUserDto => {
     name: faker.person.fullName(),
     email: faker.internet.email(),
     password: faker.internet.password(),
-    isOng: faker.datatype.boolean(),
   };
 };
 

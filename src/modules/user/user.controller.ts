@@ -1,4 +1,3 @@
-import { AuthenticatedUser } from '../../interfaces/authenticated-user.interface';
 import { User } from '../../decorators/user.decorator';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,8 +27,6 @@ export class UserController {
       email: data.email,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
-      isOng: data.isOng,
-      isValidate: data.isValidated,
     };
   }
 

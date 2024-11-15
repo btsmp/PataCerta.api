@@ -1,25 +1,60 @@
 import {
   IsEmail,
   IsNotEmpty,
-  IsBoolean,
-  MinLength,
   IsString,
+  MinLength,
+  IsOptional,
+  IsBoolean,
+  IsEnum,
+  IsInt,
+  IsNumberString,
 } from 'class-validator';
+import { UserRole } from '../../../common/enums/user-role.enum';
 
 export class CreateUserDto {
-  @IsNotEmpty({ message: 'Email is required' })
-  @IsEmail({}, { message: 'Email must be valid.' })
+  @IsNotEmpty({ message: 'O e-mail é obrigatório.' })
+  @IsEmail({}, { message: 'O e-mail deve ser válido.' })
   email: string;
 
-  @IsNotEmpty({ message: 'Name cannot be empty.' })
-  @IsString({ message: 'Name must to be a string.' })
+  @IsNotEmpty({ message: 'O nome não pode estar vazio.' })
+  @IsString({ message: 'O nome deve ser uma string.' })
   name: string;
 
-  @IsNotEmpty({ message: 'Password is required' })
-  @MinLength(6, { message: 'Password must be at least 6 characters long.' })
+  @IsNotEmpty({ message: 'A senha é obrigatória.' })
+  @MinLength(6, { message: 'A senha deve ter pelo menos 6 caracteres.' })
   password: string;
 
-  @IsNotEmpty({ message: 'isOng is required' })
-  @IsBoolean({ message: 'The isOng field must be a boolean value.' })
+  @IsOptional()
+  @IsString({ message: 'O campo "aboutMe" deve ser uma string.' })
+  aboutMe?: string;
+
+  @IsOptional()
+  @IsString({ message: 'O campo "profilePicUrl" deve ser uma string.' })
+  profilePicUrl?: string;
+
+  @IsOptional()
+  @IsString({ message: 'O campo "city" deve ser uma string.' })
+  city?: string;
+
+  @IsOptional()
+  @IsString({ message: 'O campo "uf" deve ser uma string.' })
+  uf?: string;
+
+  @IsOptional()
+  @IsNumberString({}, { message: 'O CPF deve ser um número válido.' })
+  cpf?: string;
+
+  @IsOptional()
+  @IsBoolean({ message: 'O campo "isOng" deve ser um valor booleano.' })
   isOng?: boolean;
+
+  @IsOptional()
+  @IsEnum(UserRole, { message: 'O campo "role" deve ser um valor válido.' })
+  role?: UserRole;
+
+  @IsOptional()
+  @IsInt({
+    message: 'O campo "age" deve ser um número inteiro.',
+  })
+  age?: number;
 }
