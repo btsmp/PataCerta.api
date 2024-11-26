@@ -38,18 +38,18 @@ model User {
 }
 
 model Pet {
-  id            String  @id @unique @default(uuid())
-  profilePicUrl String?
-  name          String
-  species       String
-  description   String
-  isAdopted     Boolean @default(false)
+  id          String   @id @unique @default(uuid())
+  images      String[]
+  name        String
+  species     String
+  description String
+  isAdopted   Boolean  @default(false)
 
   createdAt DateTime @default(now()) @db.Timestamp()
   updatedAt DateTime @updatedAt @db.Timestamp()
 
-  owner     User?      @relation(fields: [onwerId], references: [id])
-  onwerId   String?
+  owner     User?      @relation(fields: [ownerId], references: [id])
+  ownerId   String?
   interests Interest[]
 }
 

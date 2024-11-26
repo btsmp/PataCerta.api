@@ -1,6 +1,4 @@
-import { AuthenticatedUser } from '../../interfaces/authenticated-user.interface';
 import { User } from '../../decorators/user.decorator';
-import { UpdatePetDto } from './dto/update-pet.dto';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { PetsService } from './pets.service';
@@ -9,11 +7,13 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('pets')
 export class PetsController {
@@ -21,8 +21,13 @@ export class PetsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createPetDto: CreatePetDto, @User() user: AuthenticatedUser) {
-    return this.petsService.create(createPetDto, user);
+  @UseInterceptors(FilesInterceptor('images'))
+  create(
+    @Body() createPetDto: CreatePetDto,
+    @User() user: AuthenticatedUser,
+    @UploadedFiles() files: Express.Multer.File[],
+  ) {
+    return this.petsService.create(createPetDto, user, files);
   }
 
   @Get()
@@ -35,15 +40,15 @@ export class PetsController {
     return this.petsService.findOne(id);
   }
 
-  @UseGuards(AuthGuard)
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePetDto: UpdatePetDto) {
-    return this.petsService.update(id, updatePetDto);
-  }
+  // @UseGuards(AuthGuard)
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updatePetDto: UpdatePetDto) {
+  //   return this.petsService.update(id, updatePetDto);
+  // }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.petsService.remove(id);
+  remove(@Param('id') petId: string, @User() user: AuthenticatedUser) {
+    return this.petsService.remove(petId, user);
   }
 }

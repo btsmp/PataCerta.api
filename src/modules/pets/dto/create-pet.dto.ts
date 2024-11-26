@@ -9,4 +9,17 @@ export class CreatePetDto {
 
   @IsString()
   description: string;
+
+  images: FileDto;
+}
+
+export class FileDto {
+  @IsString()
+  filename: string;
+
+  @IsString()
+  mimetype: string;
+
+  @IsString()
+  path: string;
 }

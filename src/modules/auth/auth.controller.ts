@@ -15,7 +15,6 @@ import { AuthService } from './auth.service';
 import { Response } from 'express';
 import { AuthGuard } from '../../guards/auth.guard';
 import { User } from '../../decorators/user.decorator';
-import { AuthenticatedUser } from '../../interfaces/authenticated-user.interface';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +24,7 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async create(@Body() signInDTO: signInDTO, @Res() response: Response) {
     const tokenData = await this.authService.validateUser(signInDTO);
-    console.log(tokenData.user);
+
     this.setCookies(response, tokenData.access_token);
     return response.json(tokenData.user);
   }
