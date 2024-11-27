@@ -1,13 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import { UserModule } from './modules/user/user.module';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { PrismaService } from './shared/config/prisma';
+import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
 import { PetsModule } from './modules/pets/pets.module';
+import { PrismaService } from './shared/config/prisma';
+import { JwtModule } from '@nestjs/jwt';
+import { InterestsModule } from './modules/interests/interests.module';
 
 @Module({
-  imports: [UserModule, AuthModule, JwtModule, PetsModule],
+  imports: [UserModule, AuthModule, JwtModule, PetsModule, InterestsModule],
   controllers: [],
   providers: [PrismaService],
 })

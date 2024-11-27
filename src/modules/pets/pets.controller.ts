@@ -1,7 +1,9 @@
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { User } from '../../decorators/user.decorator';
 import { CreatePetDto } from './dto/create-pet.dto';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { PetsService } from './pets.service';
+
 import {
   Controller,
   Get,
@@ -13,7 +15,6 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
-import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('pets')
 export class PetsController {
