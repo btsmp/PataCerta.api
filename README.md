@@ -1,12 +1,14 @@
-# Pet Adoption Platform
+# PataCerta
 
-Bem-vindo ao Pet Adoption Platform! Esta plataforma foi criada para facilitar a adoção de animais de estimação, conectando pessoas interessadas em adotar com animais necessitados de um lar amoroso.
+Bem-vindo ao PataCerta Esta plataforma foi criada para facilitar a adoção de animais de estimação, conectando pessoas interessadas em adotar com animais necessitados de um lar amoroso.
 
 ## Funcionalidades Principais
 
 - **Publicação de Pets para Adoção:** Os usuários podem criar perfis para animais de estimação que estão disponíveis para adoção, incluindo informações sobre o animal e fotos adoráveis.
 
 - **Solicitações de Adoção:** Os interessados podem entrar em contato com os donos dos pets para iniciar o processo de adoção.
+  
+- **Mapeamento de Eventos:** Iremos ter um agregador de eventos relacionados a saúde pet e adoção, mantido pela comunidade.
 
 - **Chat em Tempo Real:** Facilita a comunicação entre a parte interessada na adoção e o dono do pet por meio de um sistema de chat em tempo real.
 
@@ -23,7 +25,7 @@ Se você deseja contribuir para o desenvolvimento desta plataforma, siga estas e
 
 ## Configuração do Ambiente de Desenvolvimento
 
-1. Clone o repositório: `git clone https://github.com/btsmp/pet-adoption-platform.git`.
+1. Clone o repositório: `git clone https://github.com/btsmp/PataCerta.api.git`.
 2. Instale as dependências: `npm install`.
 3. Execute o servidor local: `npm start`.
 
