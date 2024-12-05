@@ -14,7 +14,12 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFiles,
+  Query,
+  Patch,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
+import { UpdatePetDto } from './dto/update-pet.dto';
 
 @Controller('pets')
 export class PetsController {
@@ -23,33 +28,66 @@ export class PetsController {
   @UseGuards(AuthGuard)
   @Post()
   @UseInterceptors(FilesInterceptor('images'))
-  create(
+  async create(
     @Body() createPetDto: CreatePetDto,
     @User() user: AuthenticatedUser,
     @UploadedFiles() files: Express.Multer.File[],
   ) {
-    return this.petsService.create(createPetDto, user, files);
+    try {
+      return await this.petsService.create(createPetDto, user, files);
+    } catch (error) {
+      console.error('Error creating pet:', error.message);
+      throw error;
+    }
   }
 
   @Get()
-  findAll() {
-    return this.petsService.findAll();
+  async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ) {
+    try {
+      return await this.petsService.findAll(page, limit);
+    } catch (error) {
+      console.error('Error fetching pets:', error.message);
+      throw error;
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.petsService.findOne(id);
+  async findOne(@Param('id') id: string) {
+    try {
+      return await this.petsService.findOne(id);
+    } catch (error) {
+      console.error(`Error finding pet with ID ${id}:`, error.message);
+      throw error;
+    }
   }
 
-  // @UseGuards(AuthGuard)
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updatePetDto: UpdatePetDto) {
-  //   return this.petsService.update(id, updatePetDto);
-  // }
+  @UseGuards(AuthGuard)
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePetDto: UpdatePetDto,
+    @User() user: AuthenticatedUser,
+  ) {
+    try {
+      return await this.petsService.update(id, updatePetDto, user);
+    } catch (error) {
+      console.error(`Error updating pet with ID ${id}:`, error.message);
+      throw error;
+    }
+  }
 
   @UseGuards(AuthGuard)
   @Delete(':id')
-  remove(@Param('id') petId: string, @User() user: AuthenticatedUser) {
-    return this.petsService.remove(petId, user);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('id') petId: string, @User() user: AuthenticatedUser) {
+    try {
+      await this.petsService.remove(petId, user);
+    } catch (error) {
+      console.error(`Error deleting pet with ID ${petId}:`, error.message);
+      throw error;
+    }
   }
 }
