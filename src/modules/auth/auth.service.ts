@@ -1,6 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../../shared/config/prisma';
-import { UpdateAuthDto } from './dto/update-auth.dto';
 import { signInDTO } from './dto/sign-in.dto';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
@@ -16,7 +15,7 @@ export class AuthService {
     const user = await this.prisma.user.findFirst({
       where: { email },
     });
-    if (!user || !bcrypt.compare(password, user.password)) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException('Email ou senha incorretas');
     }
 
@@ -35,17 +34,5 @@ export class AuthService {
       access_token: token,
       user: payload,
     };
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
-
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${updateAuthDto} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
   }
 }

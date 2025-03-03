@@ -18,7 +18,11 @@ async function bootstrap() {
     jsonDocumentUrl: 'api/json',
   });
 
-  await app.listen(3000);
+  const port = 3000;
+  await app.listen(port);
+
+  console.log(`Backend rodando em: http://localhost:${port}`);
+  console.log(`Swagger disponível em: http://localhost:${port}/api`);
 }
 
 bootstrap();

@@ -52,7 +52,11 @@ describe('AuthController', () => {
       expect(responseMock.cookie).toHaveBeenCalledWith(
         'access_token',
         tokenData.access_token,
-        { httpOnly: true },
+        {
+          httpOnly: true,
+          sameSite: 'strict',
+          secure: process.env.NODE_ENV === 'production',
+        },
       );
       expect(responseMock.json).toHaveBeenCalledWith(tokenData.user);
     });

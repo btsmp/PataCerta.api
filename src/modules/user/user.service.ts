@@ -53,7 +53,7 @@ export class UserService {
     const userExists = await this.prisma.user.findFirst({ where: { id } });
 
     if (!userExists) {
-      throw new NotFoundException(`User ${id} does not exist`);
+      throw new NotFoundException(`Usuário ${id} não existe`);
     } else {
       return userExists;
     }

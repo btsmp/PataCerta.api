@@ -11,8 +11,9 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { CreateInterestDto } from './dto/create-interest.dto';
 import { InterestsService } from './interests.service';
-import { User } from 'src/decorators/user.decorator';
+import { User } from '../../decorators/user.decorator';
 import { Interest } from '@prisma/client';
+import { InterestDto } from './dto/interest.dto';
 
 @ApiTags('interests')
 @Controller('interests')
@@ -21,11 +22,15 @@ export class InterestsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create a new interest' })
-  @ApiResponse({ status: 201, description: 'Interest created successfully.' })
+  @ApiOperation({ summary: 'Criar um novo interesse' })
+  @ApiResponse({
+    status: 201,
+    description: 'Interesse criado com sucesso.',
+    type: InterestDto,
+  })
   @ApiResponse({
     status: 400,
-    description: 'Invalid data or business rule violated.',
+    description: 'Dados inválidos ou regra de negócio violada.',
   })
   create(
     @Body() body: CreateInterestDto,
@@ -38,7 +43,8 @@ export class InterestsController {
   @ApiOperation({ summary: 'Retrieve all interests' })
   @ApiResponse({
     status: 200,
-    description: 'List of interests retrieved successfully.',
+    description: 'Lista de interesses recuperada com sucesso.',
+    type: [InterestDto],
   })
   findAll(): Promise<Interest[]> {
     return this.interestsService.findAll();
@@ -47,8 +53,8 @@ export class InterestsController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete an interest by ID' })
-  @ApiResponse({ status: 204, description: 'Interest deleted successfully.' })
-  @ApiResponse({ status: 404, description: 'Interest not found.' })
+  @ApiResponse({ status: 204, description: 'Interesse deletado com sucesso.' })
+  @ApiResponse({ status: 404, description: 'Interesse não encontrado.' })
   async remove(@Param('id') id: string): Promise<void> {
     await this.interestsService.remove(id);
   }

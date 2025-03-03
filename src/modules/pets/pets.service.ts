@@ -5,10 +5,10 @@ import {
   ForbiddenException,
   BadRequestException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/shared/config/prisma';
+import { PrismaService } from '../../shared/config/prisma';
 import { UpdatePetDto } from './dto/update-pet.dto';
 import { CreatePetDto } from './dto/create-pet.dto';
-import { CloudinaryService } from 'src/shared/config/cdn';
+import { CloudinaryService } from '../../shared/config/cdn';
 import * as sharp from 'sharp';
 
 @Injectable()

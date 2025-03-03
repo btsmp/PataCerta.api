@@ -1,4 +1,4 @@
-import { PrismaService } from 'src/shared/config/prisma';
+import { PrismaService } from '../../shared/config/prisma';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { Module } from '@nestjs/common';

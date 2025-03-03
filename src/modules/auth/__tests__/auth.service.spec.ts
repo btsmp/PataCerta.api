@@ -4,12 +4,13 @@ import { PrismaService } from '../../../shared/config/prisma';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
+import { UserRole } from '../../../common/enums/user-role.enum';
 
-// Mock do PrismaService
-jest.mock('../../../shared/config/prisma');
-
-// Mock do JwtService
-jest.mock('@nestjs/jwt');
+const prismaMock = {
+  user: {
+    findFirst: jest.fn(),
+  },
+};
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -18,7 +19,11 @@ describe('AuthService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, PrismaService, JwtService],
+      providers: [
+        AuthService,
+        { provide: PrismaService, useValue: prismaMock },
+        JwtService,
+      ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
@@ -56,6 +61,12 @@ describe('AuthService', () => {
         cpf: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        age: 30,
+        aboutMe: 'Sobre mim',
+        profilePicUrl: 'http://example.com/profile.jpg',
+        city: 'São Paulo',
+        uf: 'SP',
+        role: UserRole.USER,
       };
 
       // Mock do método findFirst para retornar um usuário
@@ -81,6 +92,12 @@ describe('AuthService', () => {
         cpf: null,
         createdAt: new Date(),
         updatedAt: new Date(),
+        age: 30,
+        aboutMe: 'Sobre mim',
+        profilePicUrl: 'http://example.com/profile.jpg',
+        city: 'São Paulo',
+        uf: 'SP',
+        role: UserRole.USER,
       };
 
       // Mock do método findFirst para retornar um usuário
